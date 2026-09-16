@@ -1,0 +1,107 @@
+(Написати з нуля в режимі Python програму, яка їде вперед і зупиняється за 15 см до перешкоди (ultra.distance_centimeters))
+
+from ev3dev2.motor import MoveTank, OUTPUT_A, OUTPUT_B
+from ev3dev2.sensor.lego import UltrasonicSensor
+from ev3dev2.sensor import INPUT_2
+from time import sleep, time
+
+tank_drive = MoveTank(OUTPUT_A, OUTPUT_B)
+ultra = UltrasonicSensor(INPUT_2)
+
+STOP_DISTANCE = 15 
+
+SPEED = 30 
+
+print("Старт!")
+tank_drive.on(SPEED, SPEED)
+last_print_time = time()
+
+
+while ultra.distance_centimeters > STOP_DISTANCE:
+    current_time = time()
+    
+    if current_time - last_print_time >= 1.0:
+        print("Поточна відстань:", ultra.distance_centimeters, "см")
+        last_print_time = current_time
+        
+    sleep(0.01)
+
+tank_drive.off()
+
+print("Мета:", STOP_DISTANCE, "см. Фактична зупинка:", ultra.distance_centimeters, "см.")
+
+sleep(1)
+
+tank_drive.on_for_rotations(-SPEED, -SPEED, 0.284)
+print("Від'їхали назад на 5 см.")
+
+sleep(1)
+
+print("Розвертаємося...")
+tank_drive.on_for_seconds(SPEED, -SPEED, 1.6)
+
+print("Повертаємося тим самим шляхом...")
+tank_drive.on_for_seconds(SPEED, SPEED, 3)
+
+(Написати другу програму: їде вперед і зупиняється, коли color.reflected_light_intensity падає нижче порогу — тобто робот «побачив» темну лінію. Та сама ідея, інший датчик.)
+
+from ev3dev2.motor import MoveTank, OUTPUT_A, OUTPUT_B
+from ev3dev2.sensor.lego import ColorSensor
+from ev3dev2.sensor import INPUT_1
+from time import sleep
+
+tank_drive = MoveTank(OUTPUT_A, OUTPUT_B)
+color = ColorSensor(INPUT_1)
+
+THRESHOLD = 30
+
+tank_drive.on(50, 50)
+
+while color.reflected_light_intensity > THRESHOLD:
+    sleep(0.01)
+
+tank_drive.off()
+
+(Трек П)
+from ev3dev2.motor import MoveTank, OUTPUT_A, OUTPUT_B
+from ev3dev2.sensor.lego import UltrasonicSensor
+from ev3dev2.sensor import INPUT_2
+from time import sleep
+
+
+tank_drive = MoveTank(OUTPUT_A, OUTPUT_B)
+ultra = UltrasonicSensor(INPUT_2)
+
+
+def drive_to_obstacle(threshold):
+    print("Старт! Цільова відстань:", threshold, "см")
+    MAX_SPEED = 60
+    MIN_SPEED = 5 
+    Kp = 2 
+    
+    while True:
+        current_distance = ultra.distance_centimeters
+        error = current_distance - threshold
+        
+        if error <= 0:
+            break
+        speed = error * Kp
+        
+        if speed > MAX_SPEED:
+            speed = MAX_SPEED
+        elif speed < MIN_SPEED:
+            speed = MIN_SPEED
+            
+        tank_drive.on(speed, speed)
+        sleep(0.01)
+        
+    tank_drive.off()
+    print("Зупинка! Фактична відстань:", ultra.distance_centimeters, "см\n")
+
+
+drive_to_obstacle(25)
+
+sleep(1) 
+
+drive_to_obstacle(10)
+
