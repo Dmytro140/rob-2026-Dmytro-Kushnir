@@ -1,3 +1,5 @@
 # Файли сцени й карти середовища
 
 Сюди складати файли сцен Gears і Webots, скріншоти карти.
+
+<img width="1061" height="768" alt="image" src="https://github.com/user-attachments/assets/f65e9951-ab8d-4f66-8a85-a6547f269eae" />
