@@ -7,3 +7,4 @@
 
 ## Відео
 На відео показано базовий цикл прибирання: робот їде прямо (`pylososennya`), на відстані 40 см помічає перешкоду і сповільнюється (`pidhid`), за 12 см до стіни зупиняється і розвертається на 90 градусів (`rozvorot`), після чого знову переходить у стан `pylososennya`.
+https://drive.google.com/file/d/1XOXV0vKw067CxFd3WTMjG6Pdc7S0KRTN/view?usp=sharing
